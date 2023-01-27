@@ -1,5 +1,8 @@
 package vn.hunghd.flutterdownloader
 
+import androidx.work.ForegroundInfo
+
+
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
@@ -630,8 +633,10 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
             val builder = NotificationCompat.Builder(context, CHANNEL_ID).setContentTitle(title)
                 .setContentIntent(intent)
                 .setOnlyAlertOnce(true)
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_LOW)
+//                .setAutoCancel(true)
+//                .setPriority(NotificationCompat.PRIORITY_LOW)
+
+
             when (status) {
                 DownloadStatus.RUNNING -> {
                     if (progress <= 0) {
@@ -649,6 +654,8 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                         builder.setOngoing(false)
                             .setSmallIcon(android.R.drawable.stat_sys_download_done)
                     }
+
+                        setForegroundAsync(ForegroundInfo(primaryId, builder.build()))
                 }
 
                 DownloadStatus.CANCELED -> {
